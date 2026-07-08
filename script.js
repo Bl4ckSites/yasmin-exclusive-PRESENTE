@@ -3,6 +3,7 @@
 const TURNSTILE_SITE_KEY = '0x4AAAAAADxtoWhMfFfMfy0l';
 const BACKEND_URL = 'https://yasmin-backend.rogeralbuquerque58.workers.dev';
 // =============================================
+
 const giftBox = document.getElementById('giftBox');
 const loadingOverlay = document.getElementById('loadingOverlay');
 const sparkleContainer = document.getElementById('sparkleContainer');
@@ -84,7 +85,7 @@ const orbitalStyle = document.createElement('style');
 orbitalStyle.textContent = `@keyframes orbitFloat { 0% { transform: translate(-50%, -50%) rotate(0deg) translateX(140px) rotate(0deg); opacity: 0; } 30% { opacity: 1; } 70% { opacity: 0.8; } 100% { transform: translate(-50%, -50%) rotate(360deg) translateX(140px) rotate(-360deg); opacity: 0; } }`;
 document.head.appendChild(orbitalStyle);
 
-// ========== TURNSTILE ==========
+// ========== TURNSTILE (CORRIGIDO) ==========
 function onTurnstileLoad() {
     turnstileWidgetId = turnstile.render('#giftBox', {
         sitekey: TURNSTILE_SITE_KEY,
@@ -94,7 +95,7 @@ function onTurnstileLoad() {
             resetAll();
         },
         theme: 'dark',
-        size: 'invisible'
+        appearance: 'execute' // ← MUDANÇA IMPORTANTE: substitui size: 'invisible'
     });
 }
 
