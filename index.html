@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exclusive Access - Yasmin</title>
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="icon" type="image/png" href="/favicon/favicon-96x96.png" sizes="96x96" />
+<link rel="icon" type="image/svg+xml" href="/favicon/favicon.svg" />
+<link rel="shortcut icon" href="/favicon/favicon.ico" />
+<link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
+<meta name="apple-mobile-web-app-title" content="Yasmin" />
+<link rel="manifest" href="/favicon/site.webmanifest" />
+   
+<!-- Script do Turnstile -->
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onTurnstileLoad" defer></script>
+</head>
+<body>
+    <!-- Fundo -->
+    <div class="bg-layer"></div>
+    <div class="blur-orb orb-1"></div>
+    <div class="blur-orb orb-2"></div>
+    <div class="blur-orb orb-3"></div>
+    <canvas id="particlesCanvas"></canvas>
+
+    <!-- Container Principal -->
+    <div class="container">
+        <div class="gift-wrapper" id="giftBox" tabindex="0">
+            <div class="gift-glow"></div>
+            <div class="sparkle-container" id="sparkleContainer"></div>
+            
+            <!-- Tampa da Caixa -->
+            <div class="gift-lid">
+                <div class="lid-top"></div>
+                <div class="lid-front"></div>
+                <div class="lid-shine"></div>
+            </div>
+            
+            <!-- Fitas -->
+            <div class="gift-ribbon-vertical"><div class="ribbon-shine"></div></div>
+            <div class="gift-ribbon-horizontal"><div class="ribbon-shine"></div></div>
+            
+            <!-- Base da Caixa -->
+            <div class="gift-base">
+                <div class="base-front"></div>
+                <div class="base-inner"></div>
+            </div>
+            
+            <!-- Laço -->
+            <div class="gift-bow">
+                <div class="bow-loop bow-left"></div>
+                <div class="bow-loop bow-right"></div>
+                <div class="bow-center"></div>
+            </div>
+
+            <!-- Efeitos Visuais -->
+            <div class="open-flash" id="openFlash"></div>
+            <div class="confetti-container" id="confettiContainer"></div>
+        </div>
+        
+        <p class="touch-text">Toque na caixa para abrir</p>
+    </div>
+
+    <!-- Overlay de Carregamento -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loader-ring"></div>
+        <p>Preparando sua surpresa...</p>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
