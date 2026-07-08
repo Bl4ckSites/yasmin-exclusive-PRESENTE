@@ -85,17 +85,17 @@ const orbitalStyle = document.createElement('style');
 orbitalStyle.textContent = `@keyframes orbitFloat { 0% { transform: translate(-50%, -50%) rotate(0deg) translateX(140px) rotate(0deg); opacity: 0; } 30% { opacity: 1; } 70% { opacity: 0.8; } 100% { transform: translate(-50%, -50%) rotate(360deg) translateX(140px) rotate(-360deg); opacity: 0; } }`;
 document.head.appendChild(orbitalStyle);
 
-// ========== TURNSTILE (CORRIGIDO) ==========
+// ========== TURNSTILE (CORRIGIDO - API ATUALIZADA) ==========
 function onTurnstileLoad() {
     turnstileWidgetId = turnstile.render('#giftBox', {
         sitekey: TURNSTILE_SITE_KEY,
         callback: handleVerificationSuccess,
         'error-callback': () => {
-            alert('Security verification failed. Please reload the page.');
+            console.error('Turnstile falhou. Recarregue a página.');
             resetAll();
         },
         theme: 'dark',
-        appearance: 'execute' // ← MUDANÇA IMPORTANTE: substitui size: 'invisible'
+        appearance: 'execute' // <-- ISSO SUBSTITUI O ANTIGO size: 'invisible'
     });
 }
 
@@ -104,6 +104,7 @@ function startImmediateAnimation() {
     giftBox.style.transform = 'scale(0.9)';
     giftBox.style.filter = 'brightness(1.4) drop-shadow(0 0 30px gold)';
     giftBox.classList.add('opening');
+    
     const lid = document.querySelector('.gift-lid');
     lid.style.transition = 'transform 0.05s';
     let count = 0;
@@ -116,29 +117,34 @@ function startImmediateAnimation() {
             lid.style.transition = 'transform 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
         }
     }, 50);
+    
     loadingOverlay.style.display = 'flex';
 }
 
-// ========== SUCESSO NA VERIFICAÇÃO ==========
+// ========== SUCESSO NA VERIFICAÇÃO (CHAMA O WORKER) ==========
 async function handleVerificationSuccess(token) {
     if (isOpening) return;
     isOpening = true;
+    
     loadingOverlay.style.display = 'none';
     giftBox.classList.add('lid-off');
     giftBox.classList.add('flash');
     spawnConfetti();
 
     try {
+        // Requisição para o Worker buscar o link oculto
         const response = await fetch(`${BACKEND_URL}/get-redirect`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ token })
         });
 
-        if (!response.ok) throw new Error('Verification failed');
+        if (!response.ok) throw new Error('Verification failed (Status: ' + response.status + ')');
+        
         const data = await response.json();
-
+        
         if (data.success && data.redirect_url) {
+            // Rastreamento (Opcional)
             if (typeof gtag === 'function') {
                 gtag('event', 'redirect_onlyfans', {
                     event_category: 'conversao',
@@ -149,14 +155,15 @@ async function handleVerificationSuccess(token) {
                 fbq('trackCustom', 'RedirecionamentoOnlyFans', { destino: 'onlyfans' });
             }
             
-            await sleep(200);
+            await sleep(300);
+            // O link só existe aqui, na memória do navegador, no exato momento do redirecionamento!
             window.location.href = data.redirect_url; 
         } else {
-            throw new Error('Invalid response');
+            throw new Error('Invalid response from Worker');
         }
     } catch (error) {
-        console.error(error);
-        alert('An error occurred. Please try again.');
+        console.error('Erro no redirecionamento:', error);
+        alert('Ocorreu um erro de segurança. Por favor, recarregue a página e tente novamente.');
         resetAll();
     }
 }
